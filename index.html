@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body class="container">
+    <h1>Test</h1>
+    <section class="section">
+        <h2>Name/Value Pair</h2>
+        <div class="flex justify-around">
+            <input class="input" id="input" type="text" placeholder="Name=Value">
+            <button class="btn" id="btn-add">Add</button>
+        </div>
+    </section>
+    <section class="section">
+        <h2>Name/Value Pair List</h2>
+        <div class="flex justify-around">
+            <ul class="list" id="list"></ul>
+            <div class="flex flex-column justify-around">
+                <button class="btn">Sort By Name <span>↑</span></button>
+                <button class="btn">Sort By Value <span>↑</span></button>
+                <button class="btn">Delete</button>
+                <button class="btn">Show XML</button>
+            </div>
+        </div>
+
+    </section>
+    <script src="main.js"></script>
+</body>
+
+</html>

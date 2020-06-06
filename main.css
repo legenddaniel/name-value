@@ -1,0 +1,60 @@
+* {
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.justify-center {
+    justify-content: center;
+}
+.justify-around {
+    justify-content: space-around;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40rem;
+    margin: auto;
+}
+.section {
+    width: 100%;
+}
+
+.input {
+    padding: 0 1rem;
+    width: 20rem;
+    height: 2rem;
+    border: 1px solid #000;
+    border-radius: 1rem;
+}
+
+.btn {
+    width: 8rem;
+}
+
+.list {
+    padding: 1rem;
+    min-width: 20rem;
+    height: 20rem;
+    border: 2px solid #000;
+    border-radius: 1rem;
+    overflow: auto;
+    list-style: none;
+}
+.list li:focus {
+    outline: 1px solid blue;
+}

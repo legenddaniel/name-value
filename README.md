@@ -1,5 +1,5 @@
 # name-value
- CURD of name-value piar for job application test
+ CURD of name-value piar for job application test. No lib or code snippets.
 
 IE9+ supported
 
@@ -14,3 +14,5 @@ You can press Enter to add numeric-alphabetic chars to the list, with equal sign
 - Delete: Delete the item on focus
 
 - Show in XML: Transform the list into XML format
+
+ESLint was used.

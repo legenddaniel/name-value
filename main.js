@@ -120,7 +120,7 @@ const toggleArrow = function (e) {
 };
 
 // Remove selected <li>. Due to browser support, ChildNode.remove() not using
-const deleteList = function (e) {
+const deleteList = function () {
     const focusedElement = document.activeElement;
     if (focusedElement.tagName === 'LI') focusedElement.parentNode.removeChild(focusedElement);
 };

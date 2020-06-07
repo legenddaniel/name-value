@@ -40,10 +40,17 @@
     height: 2rem;
     border: 1px solid #000;
     border-radius: 1rem;
+    outline: none;
+}
+.input:focus {
+    box-shadow: inset 0 0 1px 1px red;
 }
 
 .btn {
     width: 8rem;
+}
+.btn-list {
+    padding: 1rem 0;
 }
 
 .list {

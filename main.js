@@ -61,13 +61,13 @@ const sortList = function (sortBy, order) {
 };
 
 // Check if the user is clicking the sort buttons instead of delete or XML buttons
-const isButton = function (e) {
+const isSortButton = function (e) {
     return e.target.tagName === 'BUTTON' && e.target.innerText.indexOf('Sort') > -1;
 };
 
 // Sort by name/value/order based on the innerText of the clicked button
 const sortHandler = function (e) {
-    if (isButton(e)) {
+    if (isSortButton(e)) {
         const buttonClicked = e.target;
         const buttonHTML = buttonClicked.innerText;
         const arrow = buttonHTML.match(/↑|↓/)[0];
@@ -81,7 +81,7 @@ const sortHandler = function (e) {
 
 // Toggle '↓' & '↑' of button innerText
 const toggleArrow = function (e) {
-    if (isButton(e)) {
+    if (isSortButton(e)) {
         const target = e.target;
         const html = target.innerHTML;
         const arrow = /↑/.test(html) ? '↓' : '↑';
@@ -91,9 +91,43 @@ const toggleArrow = function (e) {
 };
 
 // Remove selected <li>. Due to browser support, ChildNode.remove() not using
-const deleteList = function(e) {
+const deleteList = function (e) {
     const focusedElement = document.activeElement;
     if (focusedElement.tagName === 'LI') focusedElement.parentNode.removeChild(focusedElement);
+};
+
+// Check the innerText of 'Show in XML' button
+const isXML = function () {
+    return document.getElementById('xml').innerText.indexOf('XML') > -1;
+};
+
+// XML/HTML conversion
+const convertXML = function () {
+    const html = document.getElementById('list').innerHTML;
+    const [stringsToReplace, regex] = isXML() ?
+        [{
+            '<li tabindex="1">': '<li tabindex="1">&lt;item&gt;<br>&lt;name&gt;',
+            '</span>=': '</span>&lt;/name&gt;<br>&lt;value&gt;',
+            '</span></li>': '</span>&lt;/value&gt;<br>&lt;/item&gt;</li>'
+        }, /<li tabindex="1">|<\/span>=|<\/span><\/li>/g
+        ] : [{
+            '<li tabindex="1">&lt;item&gt;<br>&lt;name&gt;': '<li tabindex="1">',
+            '</span>&lt;/name&gt;<br>&lt;value&gt;': '</span>=',
+            '</span>&lt;/value&gt;<br>&lt;/item&gt;</li>': '</span></li>'
+        }, /<li tabindex="1">&lt;item&gt;<br>&lt;name&gt;|<\/span>&lt;\/name&gt;<br>&lt;value&gt;|<\/span>&lt;\/value&gt;<br>&lt;\/item&gt;<\/li>/g
+        ];
+
+    const newHtml = html.replace(regex, function (match) { return stringsToReplace[match] });
+    document.getElementById('list').innerHTML = newHtml;
+};
+
+// Toggle the innerText of 'Show in XML' button
+const toggleXML = function (e) {
+    const target = e.target;
+    const html = target.innerHTML;
+    const xml = /XML/.test(html) ? 'HTML' : 'XML';
+    const newHtml = html.replace(/XML|HTML/, xml);
+    target.innerHTML = newHtml;
 };
 
 document.getElementById('btn-add').addEventListener('click', addPair);
@@ -103,3 +137,6 @@ document.getElementById('btns').addEventListener('click', sortHandler); //Bubbli
 document.getElementById('btns').addEventListener('click', toggleArrow); //Bubbling
 
 document.getElementById('delete').addEventListener('mousedown', deleteList);
+
+document.getElementById('xml').addEventListener('click', convertXML);
+document.getElementById('xml').addEventListener('click', toggleXML);

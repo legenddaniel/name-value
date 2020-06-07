@@ -17,20 +17,51 @@ const addPair = function () {
     }
 };
 
+// Press 'Enter' to add pair
+const addPairFiredByEnter = function(e) {
+    if (e.key === 'Enter') document.getElementById('btn-add').click();
+};
+
 // Clear input box after adding
 const clearInput = function () {
     document.getElementById('input').value = '';
 };
 
+// Press ↑ and ↓ to switch focus on the pair
+const switchPair = function(e) {
+    const target = e.target;
+    const keys = {
+        ArrowDown() {
+            const next =  target.nextElementSibling || target.parentNode.firstElementChild;
+            next.focus();
+        },
+        ArrowUp() {
+            const previous = target.previousElementSibling || target.parentNode.lastElementChild
+            previous.focus();
+        }
+    };
+    if (e.key in keys) keys[e.key]();
+}
+
+// Check the innerText of 'Show in XML' button
+const isXML = function () {
+    return document.getElementById('xml').innerText.indexOf('XML') > -1;
+};
+
+// Check if the user is clicking the sort buttons instead of delete or XML buttons
+const isSortButton = function (e) {
+    return e.target.tagName === 'BUTTON' && e.target.innerText.indexOf('Sort') > -1;
+};
+
 // Get innerText of certain elements
-const getNodesInnerText = function (identifier) {
-    return [...document.getElementsByClassName(identifier)].map(function (i) { return i.innerText });
+const getNodesInnerHtml = function (identifier) {
+    return [...document.getElementsByClassName(identifier)].map(function (i) { return i.innerHTML });
 };
 
 // Set name/value array for sorting
 const setNameValuePair = function () {
-    const names = getNodesInnerText('name');
-    const values = getNodesInnerText('value');
+    const names = getNodesInnerHtml('name');
+    const values = getNodesInnerHtml('value');
     const arr = [];
     for (let i = 0; i < names.length; i++) {
         arr.push({ Name: names[i], Value: values[i] });
@@ -41,11 +72,14 @@ const setNameValuePair = function () {
 // Render sorted name/value array back to DOM. This DocumentFragment type of method has better performance than the reverse of the setNameValuePair()
 const renderSortedNameValuePair = function (arr) {
     const innerHTMLList = arr.map(function (pair) {
-        return `<li tabindex="1"><span class="name">${pair.Name}</span>=<span class="value">${pair.Value}</span></li>`;
+        return (isXML() ?
+            `<li tabindex="1"><span class="name">${pair.Name}</span>=<span class="value">${pair.Value}</span></li>` :
+            `<li tabindex="1">&lt;pair&gt;<br><span class="name">${pair.Name}</span><br><span class="value">${pair.Value}</span><br>&lt;/pair&gt;</li>`
+        );
     });
     const innerHTML = innerHTMLList.join('');
     document.getElementById('list').innerHTML = innerHTML;
-}
+};
 
 // Sort by name/value in ascending/descending order, 4-in-1
 const sortList = function (sortBy, order) {
@@ -58,11 +92,6 @@ const sortList = function (sortBy, order) {
             return _a > _b ? -1 : _a < _b ? 1 : 0;
         }
     };
-};
-
-// Check if the user is clicking the sort buttons instead of delete or XML buttons
-const isSortButton = function (e) {
-    return e.target.tagName === 'BUTTON' && e.target.innerText.indexOf('Sort') > -1;
 };
 
 // Sort by name/value/order based on the innerText of the clicked button
@@ -96,25 +125,20 @@ const deleteList = function (e) {
     if (focusedElement.tagName === 'LI') focusedElement.parentNode.removeChild(focusedElement);
 };
 
-// Check the innerText of 'Show in XML' button
-const isXML = function () {
-    return document.getElementById('xml').innerText.indexOf('XML') > -1;
-};
-
 // XML/HTML conversion
 const convertXML = function () {
     const html = document.getElementById('list').innerHTML;
     const [stringsToReplace, regex] = isXML() ?
         [{
-            '<li tabindex="1">': '<li tabindex="1">&lt;item&gt;<br>&lt;name&gt;',
-            '</span>=': '</span>&lt;/name&gt;<br>&lt;value&gt;',
-            '</span></li>': '</span>&lt;/value&gt;<br>&lt;/item&gt;</li>'
-        }, /<li tabindex="1">|<\/span>=|<\/span><\/li>/g
+            '<li tabindex="1"><span class="name">': '<li tabindex="1">&lt;pair&gt;<br><span class="name">&lt;name&gt;',
+            '</span>=<span class="value">': '&lt;/name&gt;</span><br><span class="value">&lt;value&gt;',
+            '</span></li>': '&lt;/value&gt;</span><br>&lt;/pair&gt;</li>'
+        }, /<li tabindex="1"><span class="name">|<\/span>=<span class="value">|<\/span><\/li>/g
         ] : [{
-            '<li tabindex="1">&lt;item&gt;<br>&lt;name&gt;': '<li tabindex="1">',
-            '</span>&lt;/name&gt;<br>&lt;value&gt;': '</span>=',
-            '</span>&lt;/value&gt;<br>&lt;/item&gt;</li>': '</span></li>'
-        }, /<li tabindex="1">&lt;item&gt;<br>&lt;name&gt;|<\/span>&lt;\/name&gt;<br>&lt;value&gt;|<\/span>&lt;\/value&gt;<br>&lt;\/item&gt;<\/li>/g
+            '<li tabindex="1">&lt;pair&gt;<br><span class="name">&lt;name&gt;': '<li tabindex="1"><span class="name">',
+            '&lt;/name&gt;</span><br><span class="value">&lt;value&gt;': '</span>=<span class="value">',
+            '&lt;/value&gt;</span><br>&lt;/pair&gt;</li>': '</span></li>'
+        }, /<li tabindex="1">&lt;pair&gt;<br><span class="name">&lt;name&gt;|&lt;\/name&gt;<\/span><br><span class="value">&lt;value&gt;|&lt;\/value&gt;<\/span><br>&lt;\/pair&gt;<\/li>/g
         ];
 
     const newHtml = html.replace(regex, function (match) { return stringsToReplace[match] });
@@ -130,8 +154,12 @@ const toggleXML = function (e) {
     target.innerHTML = newHtml;
 };
 
+document.getElementById('input').addEventListener('keydown', addPairFiredByEnter);
+
 document.getElementById('btn-add').addEventListener('click', addPair);
 document.getElementById('btn-add').addEventListener('click', clearInput);
+
+document.getElementById('list').addEventListener('keydown', switchPair);
 
 document.getElementById('btns').addEventListener('click', sortHandler); //Bubbling
 document.getElementById('btns').addEventListener('click', toggleArrow); //Bubbling

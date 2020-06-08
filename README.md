@@ -3,9 +3,15 @@
 
 IE9+ supported
 
+[preview](https://legenddaniel.github.io/name-value/)
+
+![Scan the QR code to open on mobile phone](qr-code.png "Scan the QR code to open on mobile phone")
+
 A try for a better decoupling
 
-You can press Enter to add numeric-alphabetic chars to the list, with equal sign in the middle
+You can press Enter to add numeric-alphabetic chars to the list, with equal sign in the middle.
+
+You can use ↑ and ↓ to switch list items.
 
 - Sort By Name: Sort by the string at the left side of the equal sign
 

@@ -1,5 +1,5 @@
 # name-value
- CURD of name-value piar for job application test. No lib or code snippets.
+ CRUD of name-value piar for job application test. No lib or code snippets.
 
 IE9+ supported
 
